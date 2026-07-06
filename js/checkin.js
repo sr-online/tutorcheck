@@ -148,6 +148,14 @@ document.getElementById("reselectBtn").addEventListener("click", () => {
   showStep("search");
 });
 
+// ใช้รหัสเอกสารที่คำนวณได้แน่นอนจาก วิชา+วันที่+ชื่อ แล้วเขียนด้วย .set() แทน .add()
+// เพื่อให้ Firestore Rules (allow update: if false) เป็นตัวกันการลงชื่อซ้ำให้แบบ atomic
+// จริงๆ ในระดับฐานข้อมูล ไม่ใช่แค่เช็กฝั่งหน้าเว็บ (กันกรณีกดยืนยันซ้ำๆ เร็วๆ หรือลงชื่อพร้อมกันจากหลายเครื่อง)
+function makeCheckinId(subjectId, dateStr, name) {
+  const cleanName = name.replace(/[\/\s]+/g, "");
+  return `${subjectId}_${dateStr}_${cleanName}`;
+}
+
 document.getElementById("confirmBtn").addEventListener("click", async () => {
   if (submitting || !selectedStudent || !currentSubject) return;
   submitting = true;
@@ -158,30 +166,25 @@ document.getElementById("confirmBtn").addEventListener("click", async () => {
 
   try {
     const today = dateKey(new Date());
+    const checkinId = makeCheckinId(currentSubject.id, today, selectedStudent.name);
 
-    const existing = await db
-      .collection("checkins")
-      .where("subject", "==", currentSubject.id)
-      .where("date", "==", today)
-      .where("name", "==", selectedStudent.name)
-      .get();
-
-    if (!existing.empty) {
+    await db.collection("checkins").doc(checkinId).set({
+      subject: currentSubject.id,
+      subjectName: currentSubject.name,
+      name: selectedStudent.name,
+      class: selectedStudent.class,
+      date: today,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    showSuccess();
+  } catch (err) {
+    if (err && err.code === "permission-denied") {
+      // เขียนไม่ผ่านเพราะเอกสารนี้มีอยู่แล้ว (ลงชื่อไปแล้ววันนี้)
       showAlreadyDone();
     } else {
-      await db.collection("checkins").add({
-        subject: currentSubject.id,
-        subjectName: currentSubject.name,
-        name: selectedStudent.name,
-        class: selectedStudent.class,
-        date: today,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      });
-      showSuccess();
+      console.error(err);
+      showToast("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
     }
-  } catch (err) {
-    console.error(err);
-    showToast("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
   } finally {
     btn.textContent = originalText;
     btn.disabled = false;
