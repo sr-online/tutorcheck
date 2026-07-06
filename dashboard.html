@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Dashboard ครู - เช็กชื่อนักเรียนติวเสริม</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Password gate -->
+  <div class="gate-shell" id="gateShell">
+    <div class="gate-card">
+      <div class="logo">√</div>
+      <h1>สำหรับครูเท่านั้น</h1>
+      <p>กรุณากรอกรหัสผ่านเพื่อดู Dashboard</p>
+      <input type="password" id="gatePassword" placeholder="รหัสผ่าน" autocomplete="current-password" />
+      <div class="login-error" id="gateError"></div>
+      <button class="btn btn-primary" id="gateBtn" style="width:100%">เข้าดู Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dash-shell hidden" id="dashShell">
+    <div class="dash-header">
+      <div class="title-block">
+        <div class="logo" style="width:38px;height:38px;font-size:16px;">√</div>
+        <div>
+          <div class="dash-title">Dashboard เช็กชื่อนักเรียนติวเสริม</div>
+          <div class="dash-date" id="dashDate"></div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="icon-btn" id="refreshBtn">⟳ รีเฟรช</button>
+      </div>
+    </div>
+
+    <div class="tab-row" id="subjectTabs"></div>
+
+    <div class="filter-bar">
+      <input type="date" id="datePicker" />
+      <button class="icon-btn" id="exportBtn">⬇ ส่งออก CSV</button>
+    </div>
+
+    <div class="stat-grid" id="statGrid"></div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">แนวโน้มการลงชื่อ 14 วันล่าสุด</div>
+        <div class="chart-legend" id="chartLegend"></div>
+      </div>
+      <div class="chart-wrap" id="chartWrap" style="position:relative;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title" id="tableTitle">รายชื่อที่ลงชื่อวันนี้</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <div class="tab-row" id="viewTabs" style="margin-bottom:0;"></div>
+          <input type="text" class="search-inline" id="tableSearch" placeholder="ค้นหาชื่อ..." />
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="data-table" id="dataTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/firebase-init.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>เช็กชื่อนักเรียนติวเสริม</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="logo">√</div>
+      <div>
+        <div class="title">เช็กชื่อนักเรียนติวเสริม</div>
+        <div class="subtitle" id="todayLabel"></div>
+      </div>
+    </div>
+
+    <main>
+      <!-- STEP 1: เลือกกิจกรรม/วิชา -->
+      <section class="step active" id="step-subject">
+        <div class="section-heading">มัธยมศึกษาตอนต้น</div>
+        <div class="subject-grid" id="subjectGridJunior"></div>
+        <div class="section-heading">มัธยมศึกษาตอนปลาย</div>
+        <div class="subject-grid" id="subjectGridSenior"></div>
+      </section>
+
+      <!-- STEP 2: ค้นหาชื่อ -->
+      <section class="step" id="step-search">
+        <div class="back-row">
+          <button class="btn-back" id="backFromSearch">‹</button>
+          <div class="current-subject-pill" id="subjectPill"></div>
+        </div>
+        <div class="search-box">
+          <input type="text" id="nameInput" placeholder="พิมพ์ชื่อ-สกุลของคุณ..." autocomplete="off" />
+        </div>
+        <div class="result-list" id="resultList"></div>
+      </section>
+
+      <!-- STEP 3: ยืนยัน -->
+      <section class="step" id="step-confirm">
+        <div class="back-row">
+          <button class="btn-back" id="backFromConfirm">‹</button>
+          <div class="current-subject-pill" id="subjectPillConfirm"></div>
+        </div>
+        <div class="confirm-card">
+          <div class="avatar" id="confirmAvatar"></div>
+          <div class="c-name" id="confirmName"></div>
+          <div class="c-class" id="confirmClass"></div>
+          <div class="confirm-table">
+            <div class="row"><span class="k">กิจกรรม/วิชา</span><span class="v" id="confirmSubject"></span></div>
+            <div class="row"><span class="k">ระดับชั้น</span><span class="v" id="confirmClass2"></span></div>
+            <div class="row"><span class="k">วันที่</span><span class="v" id="confirmDate"></span></div>
+            <div class="row"><span class="k">เวลาลงชื่อ</span><span class="v" id="confirmTime"></span></div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="reselectBtn">เลือกใหม่</button>
+          <button class="btn btn-primary" id="confirmBtn">ยืนยันการลงชื่อ</button>
+        </div>
+      </section>
+
+      <!-- STEP 4: สำเร็จ -->
+      <section class="step" id="step-success">
+        <div class="success-wrap">
+          <div class="success-badge" id="successBadge">✓</div>
+          <div class="success-title" id="successTitle">ลงชื่อสำเร็จ</div>
+          <div class="success-detail" id="successDetail"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="doneBtn" style="flex:1">ลงชื่อคนต่อไป</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/firebase-init.js"></script>
+  <script src="js/checkin.js"></script>
+</body>
+</html>

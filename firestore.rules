@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /checkins/{docId} {
+      // อ่านได้ทุกคน (ใช้แสดงผล Dashboard และตรวจสอบการลงชื่อซ้ำ)
+      allow read: if true;
+
+      // สร้างรายการลงชื่อใหม่ได้ ถ้าข้อมูลครบตามรูปแบบที่กำหนด (กันข้อมูลมั่ว/ผิดโครงสร้าง)
+      allow create: if request.resource.data.subject is string
+        && request.resource.data.name is string
+        && request.resource.data.class is string
+        && request.resource.data.date is string
+        && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+
+      // ห้ามแก้ไขหรือลบข้อมูลจากฝั่งเว็บ (กันข้อมูลถูกงัดแก้)
+      allow update, delete: if false;
+    }
+  }
+}
